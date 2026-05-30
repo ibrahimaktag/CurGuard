@@ -1,0 +1,21 @@
+# Global Training Configuration
+
+seed: 42
+batch_size: 256
+epochs: 50
+early_stopping_patience: 20  # 15→20: model daha uzun süre iyileşme şansı alıyor
+learning_rate: 0.0001  # script artık bunu gerçekten okuyor (hardcoded 1e-3 fix)
+optimizer: "adam"
+use_gpu: true
+mixed_precision: false  # GPU'nuz destekliyorsa true yapın (fp16 hızlandırma)
+checkpoint_dir: "artifacts/models"
+
+mlflow:
+  experiment_name: "network-attack-detection"
+  tracking_uri: "artifacts/mlruns"
+  log_model_summary: true
+  log_confusion_matrix: true
+
+class_imbalance:
+  strategy: "class_weight"  # "class_weight" | "smote" | "both"
+  smote_k_neighbors: 5

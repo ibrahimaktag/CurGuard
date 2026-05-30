@@ -1,0 +1,38 @@
+# Ensemble Configuration
+# Specialist çıktılarını, anomaly detector'ı ve router'ı birleştiren katman
+
+strategy: "confidence_weighted"  # "confidence_weighted" | "majority_vote" | "stacking"
+
+specialists:
+  iot:
+    weight: 1.0  # Router confidence'ına göre dinamik olarak değişir
+    min_confidence: 0.5
+  cloud:
+    weight: 1.0
+    min_confidence: 0.5
+
+# İki ayrı anomali modeli (IoT ve Cloud özellik uzayları farklı olduğu için önerilir).
+# artifacts/models/<name> altında vae.keras + metadata.pkl beklenir.
+# Eğitim: python scripts/train_anomaly.py --domain iot|cloud
+anomaly_models:
+  iot: "anomaly_detector_iot"
+  cloud: "anomaly_detector_cloud"
+# Eski tek klasör (anomaly_detector) yalnızca yukarıdakiler yoksa yüklenir (geriye dönük uyumluluk).
+
+# VAE+IF anomaly detection entegrasyonu
+anomaly_integration:
+  # "override": anomaly flagged → specialist sonucunu geçersiz kıl
+  # "augment": anomaly skoru ayrı bir sinyal olarak ekle
+  mode: "override"
+  override_threshold: 0.8  # Bu değerin üzerindeki anomaly score → specialist override
+
+# Dashboard uyarı eşikleri
+alert_thresholds:
+  attack_confidence: 0.7   # Bu değerin üzeri → "Attack Detected" alarmı
+  anomaly_score: 0.5        # Bu değerin üzeri → "Anomaly Identified" alarmı
+  low_confidence_warn: 0.5  # Bu değerin altı → "Low Confidence" uyarısı
+
+# XAI entegrasyonu
+xai:
+  compute_shap: true
+  top_k_features: 10  # Dashboard'da gösterilecek en önemli k özellik

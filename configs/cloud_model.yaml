@@ -1,0 +1,45 @@
+# Cloud Specialist Model Configuration
+# Dataset: CIC-IDS2018 | Architecture: CNN + LSTM + MultiHeadAttention
+
+model_name: "cloud_specialist"
+
+architecture:
+  # Input reshape: (batch, timesteps, features_per_step)
+  # Cloud trafiği genellikle daha yüksek boyutlu
+  input_reshape: [10, -1]
+
+  # 1D CNN bloğu (cloud için daha derin)
+  cnn_filters: [64, 128, 256]
+  cnn_kernel_size: 3
+  cnn_pool_size: 2
+
+  # LSTM (cloud yüksek hız için daha büyük)
+  lstm_units: 256
+  lstm_return_sequences: true
+
+  # Multi-Head Self-Attention
+  attention_num_heads: 8
+  attention_key_dim: 64
+  attention_dropout: 0.1
+
+  # Dense katmanlar
+  dense_units: [512, 256]
+  dropout_rate: 0.3
+  output_activation: "softmax"
+
+training:
+  label_smoothing: 0.1
+  class_weight_strategy: "balanced"
+
+ablation:
+  use_attention: true  # false → CNN+LSTM only
+
+hyperparameter_search:
+  enabled: false
+  n_trials: 50
+  timeout_seconds: 3600
+  search_space:
+    lstm_units: [128, 256, 512]
+    attention_num_heads: [4, 8, 16]
+    dropout_rate: [0.2, 0.3, 0.5]
+    learning_rate: [0.0001, 0.001, 0.01]

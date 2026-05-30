@@ -1,0 +1,46 @@
+# IoT Specialist Model Configuration
+# Dataset: CIC-IoT2023 | Architecture: CNN + LSTM + MultiHeadAttention
+
+model_name: "iot_specialist"
+
+architecture:
+  # Input reshape: (batch, timesteps, features_per_step)
+  # Gerçek değerler EDA sonrası belirlenecek
+  input_reshape: [10, -1]
+
+  # 1D CNN bloğu
+  cnn_filters: [64, 128]
+  cnn_kernel_size: 3
+  cnn_pool_size: 2
+
+  # LSTM
+  lstm_units: 128
+  lstm_return_sequences: true  # MultiHeadAttention için zorunlu
+
+  # Multi-Head Self-Attention
+  attention_num_heads: 4
+  attention_key_dim: 32
+  attention_dropout: 0.1
+
+  # Dense katmanlar
+  dense_units: [256, 128]
+  dropout_rate: 0.3
+  output_activation: "softmax"
+
+training:
+  label_smoothing: 0.1
+  class_weight_strategy: "balanced"
+
+# Ablation study: aşağıdaki flag ile attention katmanı devre dışı bırakılabilir
+ablation:
+  use_attention: true  # false → CNN+LSTM only (karşılaştırma için)
+
+hyperparameter_search:
+  enabled: false  # Optuna ile aktif etmek için true yapın
+  n_trials: 50
+  timeout_seconds: 3600
+  search_space:
+    lstm_units: [64, 128, 256]
+    attention_num_heads: [2, 4, 8]
+    dropout_rate: [0.2, 0.3, 0.5]
+    learning_rate: [0.0001, 0.001, 0.01]

@@ -1,0 +1,69 @@
+# Traffic Router Configuration
+# Meta-classifier: gelen trafiği otomatik olarak IoT vs Cloud olarak sınıflandırır
+
+model_name: "router"
+algorithm: "lightgbm"  # "lightgbm" | "random_forest"
+
+# Her iki datasette semantik olarak eşdeğer sütunların eşleşmesi.
+# common_name: router feature adı
+# iot: CIC-IoT2023 sütun adı
+# cloud: CIC-IDS2018 sütun adı
+feature_mapping:
+  flow_duration:
+    iot: "flow_duration"
+    cloud: "Flow Duration"
+  header_length:
+    iot: "Header_Length"
+    cloud: "Fwd Header Length"
+  flow_rate:
+    iot: "Rate"
+    cloud: "Flow Bytes/s"
+  syn_flag:
+    iot: "syn_flag_number"
+    cloud: "SYN Flag Count"
+  fin_flag:
+    iot: "fin_flag_number"
+    cloud: "FIN Flag Count"
+  rst_flag:
+    iot: "rst_flag_number"
+    cloud: "RST Flag Count"
+  psh_flag:
+    iot: "psh_flag_number"
+    cloud: "PSH Flag Count"
+  ack_flag:
+    iot: "ack_flag_number"
+    cloud: "ACK Flag Count"
+  pkt_len_mean:
+    iot: "AVG"
+    cloud: "Packet Length Mean"
+  pkt_len_max:
+    iot: "Max"
+    cloud: "Max Packet Length"
+  pkt_len_min:
+    iot: "Min"
+    cloud: "Min Packet Length"
+  iat_mean:
+    iot: "IAT"
+    cloud: "Flow IAT Mean"
+  pkt_count:
+    iot: "Number"
+    cloud: "Total Fwd Packets"
+
+lightgbm_params:
+  n_estimators: 200
+  learning_rate: 0.05
+  max_depth: 6
+  num_leaves: 31
+  random_state: 42
+  n_jobs: -1
+
+random_forest_params:
+  n_estimators: 200
+  max_depth: 10
+  random_state: 42
+  n_jobs: -1
+
+# Belirsizlik eşiği: bu değerin altında confidence → her iki specialist çalışır
+uncertainty_threshold: 0.75
+
+fallback_strategy: "both_weighted"  # "both_weighted" | "iot_priority" | "cloud_priority"

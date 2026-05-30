@@ -1,0 +1,36 @@
+# Anomaly Detector Configuration
+# Architecture: VAE (Variational Autoencoder) + Isolation Forest hybrid
+
+model_name: "anomaly_detector"
+
+vae:
+  latent_dim: 32
+  encoder_units: [256, 128, 64]
+  decoder_units: [64, 128, 256]
+
+  # KL divergence ağırlığı — ASLA kod içinde hardcode etme, buradan oku
+  kl_weight: 0.001
+  reconstruction_loss: "mse"  # "mse" | "binary_crossentropy"
+
+  # Anomaly threshold: train setindeki reconstruction error'ın bu yüzdesi
+  threshold_percentile: 95
+
+  epochs: 30
+  batch_size: 512
+  learning_rate: 0.001
+
+isolation_forest:
+  n_estimators: 100
+  contamination: 0.05  # Beklenen anomaly oranı (train setinde ~%5 kabul)
+  random_state: 42
+  max_features: 1.0
+
+# Hybrid anomaly score = vae_weight * vae_score + iforest_weight * iforest_score
+ensemble:
+  vae_weight: 0.6
+  iforest_weight: 0.4
+  final_threshold: 0.5  # Bu değerin üzeri → anomaly flagged
+
+# Eğitim: SADECE "Normal" trafik üzerinde eğit
+training:
+  train_on_normal_only: true  # Bu flag false yapılmamalı

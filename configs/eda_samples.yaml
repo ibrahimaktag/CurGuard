@@ -1,0 +1,23 @@
+# EDA master sample configuration (exploration only, not training splits)
+random_state: 42
+output_dir: "data/eda_samples"
+
+cloud:
+  raw_subdir: "cicids2018"
+  label_column: "Label"
+  source_column: "source_file"
+  max_total_rows: 400000
+  max_rows_per_file: 80000
+  min_rows_per_class: 100
+  max_rows_per_class: 60000
+  chunk_size: 100000
+  large_file_mb: 400
+
+iot:
+  raw_subdir: "ciciot2023"
+  label_column: "label"
+  source_column: "source_file"
+  max_total_rows: 350000
+  max_rows_per_file: 8000
+  min_rows_per_class: 150
+  max_rows_per_class: 12000

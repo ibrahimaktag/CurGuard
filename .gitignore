@@ -1,0 +1,54 @@
+# Virtual Environment
+venv/
+.venv/
+venv1/
+
+# Data (raw, processed - git LFS gerektirecek kadar büyük)
+data/raw/
+data/processed/
+data/splits/
+data/eda_samples/
+
+# Artifacts (model ağırlıkları, MLflow runs)
+artifacts/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Environment
+.env
+
+# Jupyter
+.ipynb_checkpoints/
+notebooks/.ipynb_checkpoints/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Test
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Ruff / linter cache
+.ruff_cache/
+
+# MLflow (ayrıca artifacts/ altında da var ama direkt kök için)
+mlruns/
+
+.cursor/
+.cursorrules
+

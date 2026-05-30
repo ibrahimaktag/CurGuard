@@ -1,0 +1,41 @@
+[project]
+name = "network-attack-detection"
+version = "0.1.0"
+description = "AI-Driven Network Attack Detection in Cloud and IoT Environments"
+requires-python = ">=3.11"
+
+[tool.black]
+line-length = 88
+target-version = ["py311"]
+exclude = '''
+/(
+    notebooks
+  | data
+  | venv
+  | artifacts
+)/
+'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
+skip = ["venv", "data", "notebooks", "artifacts"]
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+select = ["E", "W", "F", "I", "N", "UP", "B"]
+ignore = ["E501"]
+exclude = ["notebooks/", "data/", "venv/", "artifacts/"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+addopts = "-v --cov=src --cov-report=term-missing"
+
+[tool.mypy]
+python_version = "3.11"
+warn_return_any = true
+warn_unused_configs = true
+ignore_missing_imports = true

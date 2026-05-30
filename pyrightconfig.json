@@ -1,0 +1,14 @@
+{
+    "pythonVersion": "3.11",
+    "pythonPlatform": "All",
+    "typeCheckingMode": "basic",
+    "reportMissingImports": true,
+    "reportMissingTypeStubs": false,
+    "venvPath": ".",
+    "venv": "venv",
+    "exclude": [
+      "notebooks/",
+      "data/",
+      "venv/"
+    ]
+  }

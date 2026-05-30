@@ -1,0 +1,123 @@
+# Dataset Configuration
+# CIC-IoT2023: https://www.unb.ca/cic/datasets/iotdataset-2023.html
+# CIC-IDS2018: https://www.unb.ca/cic/datasets/ids-2018.html
+#
+# Path resolution strategy
+# ------------------------
+# local  → raw_path         (relative to project root, resolved by get_dataset_path())
+# kaggle → kaggle_raw_path  (absolute read-only path under /kaggle/input/)
+#
+# The active environment is detected automatically by config.py:
+#   is_kaggle() → os.environ.get("KAGGLE_KERNEL_RUN_TYPE") is not None
+
+# ---------------------------------------------------------------------------
+# Environment-level artifact root (write-able output directories)
+# ---------------------------------------------------------------------------
+environment:
+  local:
+    artifacts_root: "artifacts"             # relative to project root
+  kaggle:
+    artifacts_root: "/kaggle/working/artifacts"   # absolute, always writable on Kaggle
+
+# ---------------------------------------------------------------------------
+# IoT domain — CICIoT2023
+# ---------------------------------------------------------------------------
+iot:
+  name: "CIC-IoT2023"
+
+  # Local path (relative to project root)
+  raw_path: "data/raw/ciciot2023"
+
+  # Kaggle read-only dataset path
+  # Upload CICIoT2023 CSVs as a Kaggle dataset named "ciciot2023"
+  # then Add Data → /kaggle/input/ciciot2023/
+  kaggle_raw_path: "/kaggle/input/ciciot2023"
+
+  processed_path: "data/processed/iot"
+  splits_path: "data/splits/iot"
+  target_column: "label"
+
+  # CIC-IoT2023'te label sütunu CSV içinde yok;
+  # her dosyanın adı (uzantısız, .pcap kısmı da atılır) label olarak kullanılır.
+  # Örnek: Backdoor_Malware.pcap.csv → "Backdoor_Malware"
+  label_source: "filename"
+
+
+  test_split: 0.2
+  val_split: 0.1
+  random_state: 42
+
+  # 33 attack type, 7 kategori
+  attack_classes:
+    - "Normal"
+    - "DDoS-ICMP_Flood"
+    - "DDoS-UDP_Flood"
+    - "DDoS-TCP_Flood"
+    - "DDoS-PSHACK_Flood"
+    - "DDoS-SYN_Flood"
+    - "DDoS-RSTFINFlood"
+    - "DDoS-SynonymousIP_Flood"
+    - "DDoS-ACK_Fragmentation"
+    - "DDoS-UDP_Fragmentation"
+    - "DDoS-ICMP_Fragmentation"
+    - "DDoS-SlowLoris"
+    - "DDoS-HTTP_Flood"
+    - "DoS-UDP_Flood"
+    - "DoS-SYN_Flood"
+    - "DoS-TCP_Flood"
+    - "DoS-HTTP_Flood"
+    - "Mirai-udpplain"
+    - "Mirai-greip"
+    - "Mirai-greeth"
+    - "Recon-HostDiscovery"
+    - "Recon-OSScan"
+    - "Recon-PortScan"
+    - "Recon-PingSweep"
+    - "VulnerabilityScan"
+    - "BrowserHijacking"
+    - "CommandInjection"
+    - "SqlInjection"
+    - "XSS"
+    - "Backdoor_Malware"
+    - "Uploading_Attack"
+    - "DictionaryBruteForce"
+    - "DNS_Spoofing"
+
+# ---------------------------------------------------------------------------
+# Cloud domain — CIC-IDS2018
+# ---------------------------------------------------------------------------
+cloud:
+  name: "CIC-IDS2018"
+
+  # Local path (relative to project root)
+  raw_path: "data/raw/cicids2018"
+
+  # Kaggle read-only dataset path
+  # Upload CIC-IDS2018 CSVs as a Kaggle dataset named "cicids2018"
+  # then Add Data → /kaggle/input/cicids2018/
+  kaggle_raw_path: "/kaggle/input/cicids2018"
+
+  processed_path: "data/processed/cloud"
+  splits_path: "data/splits/cloud"
+  target_column: "Label"     # CSV içindeki sütun adı, büyük L
+
+  test_split: 0.2
+  val_split: 0.1
+  random_state: 42
+
+  # 14 sınıf (Benign + 13 saldırı)
+  attack_classes:
+    - "Benign"
+    - "FTP-BruteForce"
+    - "SSH-Bruteforce"
+    - "DoS-GoldenEye"
+    - "DoS-Slowloris"
+    - "DoS-SlowHTTPTest"
+    - "DoS-Hulk"
+    - "Botnet"
+    - "Infilteration"
+    - "Web-BruteForce"
+    - "XSS"
+    - "Sql-Injection"
+    - "DDoS-LOIC-HTTP"
+    - "DDoS-HOIC"
