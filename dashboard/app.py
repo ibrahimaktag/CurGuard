@@ -38,16 +38,29 @@ def main() -> None:
     a3.metric("Anomaly (tek model, eski)", "ready" if status["anomaly_legacy"] else "—")
 
     st.divider()
-    st.markdown(
-        """
-        **Kullanım:** Ham veriyi `data/raw/` altına koyun; eğitim için proje kökünden
-        `python scripts/train_router.py`, `train_iot.py`, `train_cloud.py`,
-        `train_anomaly.py --domain iot` ve `train_anomaly.py --domain cloud` çalıştırın.
+    with st.expander("📖 Kullanım Kılavuzu & Komutlar"):
+        st.markdown(
+            """
+            Ham veriyi `data/raw/` dizini altına yerleştirdikten sonra, tüm sistemi sırasıyla aşağıdaki komutlarla eğitebilir ve değerlendirebilirsiniz:
 
-        Soldaki menüde dört panel: **Monitoring**, **Alerts**, **XAI (SHAP)**,
-        **Metrikler** (confusion matrix, ROC/PR opsiyonel).
-        """
-    )
+            * **Yönlendirici Eğitimi**:
+              `python scripts/train_router.py`
+            * **IoT Specialist Eğitimi**:
+              `python scripts/train_iot.py`
+            * **Cloud Specialist Eğitimi**:
+              `python scripts/train_cloud.py`
+            * **IoT Anomaly Detector Eğitimi**:
+              `python scripts/train_anomaly.py --domain iot`
+            * **Cloud Anomaly Detector Eğitimi**:
+              `python scripts/train_anomaly.py --domain cloud`
+            
+            Sol taraftaki menü üzerinden panel geçişlerini kullanabilirsiniz:
+            - **Monitoring**: Genel model doğruluk ve gecikme metrikleri özeti.
+            - **Alerts**: Konfigüre edilmiş uyarı ve anomali filtre eşikleri.
+            - **XAI (SHAP)**: Karar mekanizmalarının açıklanabilirlik analizleri.
+            - **Metrics**: Yüklenen tahmin dosyalarına göre hata matrisi (confusion matrix) çizimi.
+            """
+        )
 
 
 if __name__ == "__main__":

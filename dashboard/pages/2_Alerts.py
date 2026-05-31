@@ -15,10 +15,25 @@ def main() -> None:
     anom = cfg.get("anomaly_integration", {})
 
     st.subheader("Uyarı eşikleri (`configs/ensemble.yaml`)")
-    st.write("**alert_thresholds**")
-    st.json(alert)
-    st.write("**anomaly_integration**")
-    st.json(anom)
+
+    col1, col2 = st.columns(2)
+    with col1:
+        st.markdown("#### 🚨 alert_thresholds")
+        rows1 = []
+        for k, v in alert.items():
+            rows1.append(f"| **{k}** | `{v}` |")
+        st.markdown(
+            "| Eşik Tanımı | Değer |\n| :--- | :--- |\n" + "\n".join(rows1)
+        )
+
+    with col2:
+        st.markdown("#### 🛡️ anomaly_integration")
+        rows2 = []
+        for k, v in anom.items():
+            rows2.append(f"| **{k}** | `{v}` |")
+        st.markdown(
+            "| Parametre | Değer |\n| :--- | :--- |\n" + "\n".join(rows2)
+        )
 
     st.markdown(
         """

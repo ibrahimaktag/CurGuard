@@ -18,8 +18,23 @@ def main() -> None:
     total = 5
     st.progress(ready / total, text=f"Hazır bileşen: {ready}/{total} (legacy hariç)")
 
-    with st.expander("Bileşen durumu"):
-        st.json({k: ("ok" if v else "eksik") for k, v in status.items()})
+    with st.expander("Bileşen durumu", expanded=True):
+        friendly_names = {
+            "router": "Router (IoT vs Cloud)",
+            "iot_specialist": "IoT Specialist Model",
+            "cloud_specialist": "Cloud Specialist Model",
+            "anomaly_iot": "Anomaly Detector (IoT)",
+            "anomaly_cloud": "Anomaly Detector (Cloud)",
+            "anomaly_legacy": "Anomaly Detector (Legacy)"
+        }
+        rows = []
+        for k, v in status.items():
+            status_text = "🟢 Hazır (OK)" if v else "🔴 Eksik (Missing)"
+            rows.append(f"| **{friendly_names.get(k, k)}** | {status_text} |")
+        
+        st.markdown(
+            "| Bileşen Adı | Mevcut Durum |\n| :--- | :--- |\n" + "\n".join(rows)
+        )
 
     sums = load_all_evaluation_summaries()
     st.subheader("Son değerlendirme özetleri")
