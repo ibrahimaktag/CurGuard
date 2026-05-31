@@ -7,18 +7,18 @@ from typing import Any, Literal
 
 import joblib
 
-from src.models.cloud_specialist import CloudSpecialist
-from src.models.iot_specialist import IoTSpecialist
+from src.utils.config import get_project_root
 
 Domain = Literal["iot", "cloud"]
 
 
 def specialist_paths(domain: Domain) -> tuple[Path, Path]:
     """Return (model.keras, preprocessor.joblib) paths for a domain."""
+    root = get_project_root()
     if domain == "iot":
-        base = IoTSpecialist().get_checkpoint_path()
+        base = root / "artifacts" / "models" / "iot_specialist"
     else:
-        base = CloudSpecialist().get_checkpoint_path()
+        base = root / "artifacts" / "models" / "cloud_specialist"
     return base / "model.keras", base / "preprocessor.joblib"
 
 
