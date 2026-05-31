@@ -31,7 +31,15 @@ def main() -> None:
         )
         return
 
-    n_features = int(model.input_shape[1])
+    if hasattr(model, "input_dim"):
+        n_features = model.input_dim
+    elif hasattr(model, "input_shape"):
+        n_features = int(model.input_shape[1])
+    elif prep is not None and hasattr(prep, "feature_columns"):
+        n_features = len(prep.feature_columns)
+    else:
+        n_features = 39 if domain == "iot" else 71
+
     st.success(f"Model yüklendi ({n_features} özellik).")
 
     use_demo = st.checkbox("Örnek sentetik veri ile demo (CSV gerekmez)", value=prep is None)

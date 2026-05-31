@@ -40,6 +40,26 @@ def create_shap_explainer(
         X_background = X_background[np.random.choice(len(X_background), 200, replace=False)]
 
     try:
+        import torch
+        is_torch = isinstance(model, torch.nn.Module)
+    except ImportError:
+        is_torch = False
+
+    if is_torch:
+        def predict_fn(x):
+            model.eval()
+            device = next(model.parameters()).device
+            x_t = torch.tensor(x, dtype=torch.float32).to(device)
+            with torch.no_grad():
+                outputs = model(x_t)
+                if outputs.ndim == 1:
+                    outputs = outputs.unsqueeze(1)
+                probs = torch.sigmoid(outputs)
+            return probs.cpu().numpy()
+        
+        return shap.KernelExplainer(predict_fn, X_background[:50])
+
+    try:
         explainer = shap.GradientExplainer(model, X_background)
     except Exception:
         try:

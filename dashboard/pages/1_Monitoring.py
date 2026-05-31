@@ -11,7 +11,7 @@ from dashboard.status import artifact_status
 def main() -> None:
     """Show artifact readiness and saved evaluation metrics when available."""
     st.title("Monitoring")
-    st.caption("`artifacts/evaluation/*.json` dosyaları scriptler çalıştıktan sonra burada özetlenir.")
+    st.caption("Sistem bileşenlerinin durumları ve test performanslarının genel özeti.")
 
     status = artifact_status()
     ready = sum(1 for k, v in status.items() if v and k != "anomaly_legacy")
@@ -68,10 +68,18 @@ def main() -> None:
                         + f"{data.get('latency_ms', {}).get('mean_ms', 0):.3f}"
                     )
 
-    st.info(
-        "Komutlar: `python scripts/evaluate_specialist.py --domain iot|cloud`, "
-        "`python scripts/evaluate_router.py`. MLflow: `artifacts/mlruns`."
-    )
+    with st.expander("🛠️ Geliştirici Bilgileri & Değerlendirme Komutları"):
+        st.markdown(
+            """
+            Değerlendirme sonuçlarını ve metrik raporlarını sıfırdan yeniden üretmek için şu komutları kullanabilirsiniz:
+            * **Uzman Model Değerlendirme**:
+              `python scripts/evaluate_specialist.py --domain iot|cloud`
+            * **Yönlendirici Değerlendirme**:
+              `python scripts/evaluate_router.py`
+            
+            Model eğitimi ve test aşamalarındaki tüm hiperparametre takipleri **MLflow** (`artifacts/mlruns`) üzerinde kayıt altındadır.
+            """
+        )
 
 
 main()
