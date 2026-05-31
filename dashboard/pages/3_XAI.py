@@ -17,8 +17,7 @@ def main() -> None:
     """Render SHAP explanation UI."""
     st.title("XAI — SHAP açıklaması")
     st.caption(
-        "Uzman modele göre örnek başına en etkili özellikler (ortalama mutlak SHAP). "
-        "İlk eğitimden sonra `preprocessor.joblib` gerekir."
+        "Model tahmin kararlarının ağ özniteliklerine göre açıklanabilirlik analizi (SHAP değerleri)."
     )
 
     domain = st.radio("Domain", ("iot", "cloud"), horizontal=True)
@@ -27,7 +26,8 @@ def main() -> None:
     model, prep = load_specialist_bundle(domain)
     if model is None:
         st.error(
-            f"{domain.upper()} specialist modeli bulunamadı. Önce `python scripts/train_{domain}.py` çalıştırın."
+            f"❌ {domain.upper()} dikeyine ait uzman model dosyası bulunamadı. Lütfen model eğitimi tamamlayıp "
+            f"ilgili dosyaları `artifacts/models/{domain}_specialist/` klasörüne eklediğinizden emin olun."
         )
         return
 
@@ -56,7 +56,7 @@ def main() -> None:
         st.info("Sentetik veri kullanıldı; özellik adları `f0…` placeholder’dır.")
     else:
         if uploaded is None:
-            st.warning("CSV yükleyin veya sentetik demo seçin.")
+            st.warning("⚠️ Lütfen analiz edilmesini istediğiniz ağ akış verilerini içeren bir CSV dosyası yükleyin veya yukarıdan sentetik demoyu seçin.")
             return
         raw = uploaded.read()
         df = pd.read_csv(io.BytesIO(raw), low_memory=False)

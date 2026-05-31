@@ -17,8 +17,7 @@ def main() -> None:
     """Render evaluation metrics from uploaded labels or demo data."""
     st.title("Metrikler & confusion matrix")
     st.caption(
-        "Değerlendirme CSV: `y_true` ve `y_pred` sütunları (tamsayı sınıf indeksi). "
-        "İsteğe bağlı: `proba_0` … `proba_k` sütunları ile ROC/PR-AUC."
+        "Gerçek etiketler (y_true) ve model tahminlerinin (y_pred) tutarlılığını analiz eden performans paneli."
     )
 
     use_demo = st.checkbox("Demo: rastgele küçük örnek göster", value=False)
@@ -30,13 +29,13 @@ def main() -> None:
         y_proba = None
         class_names = ["A", "B", "C"]
     else:
-        uploaded = st.file_uploader("predictions.csv", type=["csv"])
+        uploaded = st.file_uploader("Değerlendirme Dosyası Yükleyin (CSV)", type=["csv"])
         if uploaded is None:
-            st.info("CSV yükleyin veya demo kutusunu işaretleyin.")
+            st.info("💡 Lütfen model tahminlerini içeren bir CSV dosyası yükleyin veya yukarıdaki demo kutusunu işaretleyin.")
             return
         df = pd.read_csv(io.BytesIO(uploaded.read()), low_memory=False)
         if "y_true" not in df.columns or "y_pred" not in df.columns:
-            st.error("CSV içinde `y_true` ve `y_pred` sütunları olmalı.")
+            st.error("❌ CSV dosyasında 'y_true' (Gerçek Değer) ve 'y_pred' (Tahmin) sütunları bulunmak zorundadır.")
             return
         y_true = df["y_true"].to_numpy()
         y_pred = df["y_pred"].to_numpy()
@@ -47,9 +46,9 @@ def main() -> None:
         else:
             y_proba = None
         class_names = st.text_input(
-            "Sınıf adları (virgülle, opsiyonel)",
+            "Sınıf adları (virgülle ayırarak girin, opsiyonel)",
             value="",
-            help="Boş bırakılırsa indeks kullanılır.",
+            help="Boş bırakılırsa tamsayı indeksleri kullanılır.",
         )
         class_names = [x.strip() for x in class_names.split(",") if x.strip()] or None
 
@@ -67,8 +66,13 @@ def main() -> None:
     c3.metric("ROC-AUC", "—" if metrics.get("roc_auc") is None else f"{metrics['roc_auc']:.4f}")
     c4.metric("PR-AUC", "—" if metrics.get("pr_auc") is None else f"{metrics['pr_auc']:.4f}")
 
-    with st.expander("Per-class F1"):
-        st.json(metrics["per_class_f1"])
+    with st.expander("Sınıf Bazlı F1 Skorları (Per-class F1)"):
+        rows = []
+        for k, v in metrics["per_class_f1"].items():
+            rows.append(f"| **{k}** | `{v:.4f}` |")
+        st.markdown(
+            "| Sınıf Adı | F1 Skoru |\n| :--- | :--- |\n" + "\n".join(rows)
+        )
 
     st.subheader("Confusion matrix")
     cm = np.array(metrics["confusion_matrix"])
